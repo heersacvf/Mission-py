@@ -1,0 +1,50 @@
+import pandas as pd #Required for data manipulation
+import numpy as np #for using numerical python
+import matplotlib.pyplot as plt #for plotting graph
+from sklearn.model_selection import train_test_split #Model training and testing
+from sklearn.linear_model import LinearRegression 
+from sklearn import metrics
+
+
+data=pd.read_csv("https://raw.githubusercontent.com/AdiPersonalWorks/Random/master/student_scores%20-%20student_scores.csv")
+data
+
+data.describe()
+
+
+X = data["Hours"].values.reshape(-1,1)
+Y = data["Scores"]
+X_train,X_test,Y_train,Y_test = train_test_split(X,Y,random_state=0)
+model = LinearRegression().fit(X_train,Y_train)
+print("Training done for Heera")
+print(".......................................")
+print("Model intercept & coefficients")
+print("Model Intercept (b)is: {}".format(model.intercept_))
+print("Model coefficient (w)is : {} ".format(model.coef_))
+Y_pred = model.predict(X_test)
+print(".........................")
+print("R squared values of the model")
+print("R square Training :{:.3f} ".format(model.score(X_train,Y_train))) #Accuracy of training model
+print(" R Square Testing :{:.3f} ".format(model.score(X_test,Y_test))) #Accuracy of testing model
+print("..........................")
+print("Mean Square Error : {:.3f}".format(metrics.mean_absolute_error(Y_test,Y_pred)))
+
+
+plt.figure(figsize=(5,4))
+plt.scatter(X,Y)
+line = model.coef_*X+model.intercept_
+plt.plot(X,line,"r-")
+plt.title("Least Square Linear Regression")
+plt.xlabel("Hours Studied")
+plt.ylabel("Scores")
+plt.show()
+
+
+print("Predictions by the Model")
+print("...........................................")
+result = pd.DataFrame({'Actual': Y_test, 'Predicted': Y_pred})
+print(result)
+print("............................................................")
+var=np.array([9.25])
+print("Score if the person studies 9.25 hours is")
+print("Score:",model.predict(var.reshape(1,1)))
